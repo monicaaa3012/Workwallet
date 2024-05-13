@@ -1,73 +1,59 @@
 <?php
-include'header.php';
+include 'config.php';
+include 'function.php';
 checkUser();
-include'user_header.php';
+userArea();
+include 'user_header.php';
 
-if(isset($_GET['type']) && $_GET['type']=='delete'&& isset($_GET['id']) && $_GET['id']>0 ){
-    $id=get_safe_value($_GET['id']);
-    mysqli_query($con,"delete from expense where id=$id");
+if (isset($_GET['type']) && $_GET['type'] == 'delete' && isset($_GET['id']) && $_GET['id'] > 0) {
+    $id = get_safe_value($_GET['id']);
+    mysqli_query($con, "delete from expense where id=$id");
     echo "<br>Data deleted  <br>";
 }
 
+$res = mysqli_query($con, "SELECT expense.*, category.name, category.budget FROM expense INNER JOIN category ON expense.category_id=category.id WHERE expense.added_by='".$_SESSION['UID']."' ORDER BY expense.expense_date DESC");
 
 
-/*if (isset($_GET['type']) && $_GET['type'] == 'delete' && isset($_GET['id']) && $_GET['id'] > 0) {
-    $id = (int)$_GET['id']; // Cast to integer for safety
-
-    // Use prepared statement to prevent SQL injection
-    $stmt = mysqli_prepare($con, "DELETE FROM category WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $id);
-    mysqli_stmt_execute($stmt);
-
-    if (mysqli_affected_rows($con) > 0) {
-        echo "<br>Data deleted<br>";
-    } else {
-        echo "<br>No data found for deletion<br>";
-    }
-}*/
-//using join method
-$res = mysqli_query($con, "SELECT expense. * ,category.name FROM expense,category where
-expense.category_id=category.id order by expense.expense_date desc");
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkWallet</title>
-    <link rel="stylesheet" href="./css/user_header.css">
+    <title>Expense</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    
-
-
-
+<div class="container mt-4">
 <h2>Expense</h2>
-<br>
-<br>
-<br>
-<div class="but">
-<br><br><a href="manage_expense.php">Add Expense</a><br><br>
-</div>
-<br>
-<br>
+<a href="manage_expense.php" class="btn btn-primary">Add Expense</a>
 
 <?php
 if (mysqli_num_rows($res) > 0) {
-    ?>
-    <table id="costomers">
+    while ($row = mysqli_fetch_assoc($res)) {
+        // Check if the budget is allocated
+        $status = "Budget Not Allocated";
+        if ($row['budget'] !== null) {
+            // Check if the expense exceeds the budget
+            $status = ($row['price'] > $row['budget']) ? "Exceeded" : "Within Budget";
+        }
+?>
+
+    <table class="table table-bordered">
+        <thead>
         <tr>
             <th>ID</th>
             <th>Category</th>
             <th>Items</th>
             <th>Price</th>
             <th>Details</th>
-            <th> Expense Date</th>
-            <th>Actions</th>>
+            <th>Expense Date</th>
+            <th>Status</th>
+            <th>Payment Method</th>
         </tr>
-        <?php
-        while ($row = mysqli_fetch_assoc($res)) {
-            ?>
+        </thead>
+        <tbody>
             <tr>
                 <td><?php echo $row['id']; ?></td>
                 <td><?php echo $row['name']; ?></td>
@@ -75,19 +61,22 @@ if (mysqli_num_rows($res) > 0) {
                 <td><?php echo $row['price']; ?></td>
                 <td><?php echo $row['details']; ?></td>
                 <td><?php echo $row['expense_date']; ?></td>
+                <td><?php echo $status; ?></td>
+                <td><?php echo $row['payment_method']; ?></td> <!-- Displaying Payment Method -->
                 <td>
-                    <a href="manage_expense.php?id=<?php echo $row['id']; ?>">edit</a>
-                    <a href="?type=delete&id=<?php echo $row['id']; ?>">Delete</a>
+                    <a href="manage_expense.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="javascript:void(0)" onclick="delete_confir('<?php echo $row['id'];?>','expense.php')" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
-            <?php
-        }
-        ?>
+        </tbody>
     </table>
-    <?php
+<?php
+    }
 } else {
-    echo "No data found";
+    echo "<p>No data found</p>";
 }
 ?>
+</div>
 </body>
 </html>
+<?php include 'footer.php';?>

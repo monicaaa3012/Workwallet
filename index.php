@@ -1,75 +1,45 @@
-<?php
-include'header.php';
-if(isset($_POST['login'])){
-   $username= get_safe_value($_POST['username']);
-   $password=get_safe_value($_POST['password']);
-   $res=mysqli_query($con,"select * from user where username='$username' and password='$password'");
-   if(mysqli_num_rows($res)>0){
-    $row=mysqli_fetch_assoc($res);
-    $_SESSION['UID']=$row['id'];
-    $_SESSION['UNAME']=$row['username'];
-    redirect('dashboard.php');
-   }else{
-   echo "please enter valid login details";
-   }
-}
-?>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Form</title>
-  <link rel="stylesheet" href="./css/login.css">
-  <script src="https://kit.fontawesome.com/e6ec068722.js" crossorigin="anonymous"></script>
-</head>
-<body>
-  <div class="wrapper">
-    <form action="" method="POST">
-      <h1>Login</h1>
-      <!--Error and Success msz display-->
-     <!-- <span class="error-txt"><?php echo $fieldError; ?></span>-->
-      <div class="input-box">
-        <input type="text" name="username" placeholder="">
-        <i class="fa-solid fa-envelope"></i>
-        <!--Error and Success msz display-->
-      <!--<span class="error-txt"><?php echo $emailError; ?></span>-->
-      </div>
-      <div class="input-box">
-        <input type="password" name="password" placeholder="Password">
-        <i class="fa-solid fa-lock"></i>
-        <!--Error and Success msz display-->
-     <!-- <span class="error-txt"><?php echo $passwordError; ?></span>-->
-      </div>
-      <div class="remember-forgot">
-        <label><input type="checkbox" name="remember_me">Remember Me</label>
-        <a href="forgetpassword.html">Forgot Password</a>
-      </div>
-      <button type="submit" name="login" class="btn">Login</button>
-      <div class="register-link">
-        <p>Dont have an account? <a href="register.php">Register</a></p>
-      </div>
-    </form>
-  </div>
-</body>
-</html>
-    
-<!--<h2>Login</h2>
-<form method="post">
-    <table>
-        <tr>
-            <td>Username</td>
-            <td><input type="text" name="username" required></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="password" name="password" required></td>
-        </tr> 
-        <td></td>
-        <td><input type="submit" name="login" value="login"></td>
-    </table>
-</form>-->
 
-<?php
-include'footer.php';
-?>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+    <title>WorkWallet</title>
+</head>
+
+<body>
+    <?php include './navbar.php'; ?>
+    <div class="container-fluid mt-5 hero_container">
+        <div class="row ml-4">
+            <div class="col-md-6 hero_content">
+                <h1>WorkWallet</h1>
+                <p>WorkWallet is a simple and easy to use expense manager. It is designed to help you keep track of your
+                    expenses and manage your budget. It is a great tool for anyone who wants to keep track of their
+                    expenses and manage their budget.</p>
+                <a href="" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="col-md-6">
+                <img src="./images/expense.webp" alt="expense" class="img-fluid">
+            </div>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</body>
+
+</html>

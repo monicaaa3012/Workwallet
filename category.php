@@ -1,14 +1,15 @@
 <?php
-include'header.php';
+include'config.php';
+include'function.php';
 checkUser();
-
+adminArea();
 include'user_header.php';
-
 if(isset($_GET['type']) && $_GET['type']=='delete'&& isset($_GET['id']) && $_GET['id']>0 ){
     $id=get_safe_value($_GET['id']);
     mysqli_query($con,"delete from category where id=$id");
     echo "<br>Data deleted  <br>";
 }
+
 
 
 
@@ -33,36 +34,28 @@ $res = mysqli_query($con, "SELECT * FROM category order by id desc");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workwallet</title>
-    <link rel="stylesheet" href="./css/user_header.css">
-
-
-<h2>Category</h2>
+    <title>Expense</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<br>
-<br>
-<br>
 <body>
-    <div class="but">
-<a href="manage_category.php">Add Category</a>
-</div>
+<div class="container mt-4">
+<h2 style="text-align: center;">Category</h2>
+<a href="manage_category.php" class="btn btn-primary">Add Category</a>
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-
 
 <?php
 if (mysqli_num_rows($res) > 0) {
     ?>
-    <table id="customers">
+    <table class="table table-bordered" style="width:50%">
+        <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Actions</th>
+            <th >Actions</th>
         </tr>
+        </thead>
         <?php
         while ($row = mysqli_fetch_assoc($res)) {
             ?>
@@ -70,23 +63,23 @@ if (mysqli_num_rows($res) > 0) {
                 <td><?php echo $row['id']; ?></td>
                 <td><?php echo $row['name']; ?></td>
                 <td>
-                    <a href="manage_category.php?id=<?php echo $row['id']; ?>">edit</a>
-                    <a href="?type=delete&id=<?php echo $row['id']; ?>">Delete</a>
+                    <a href="manage_category.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">edit</a>
+                    <a href="javascript:void(0)" onclick="delete_confir('<?php echo $row['id'];?>','category.php')" class="btn btn-sm btn-danger">Delete</a>
+
                 </td>
             </tr>
             <?php
         }
         ?>
     </table>
-
     <?php
 } else {
-    echo "No data found";
+    echo "<p>No data found</p>";
 }
 ?>
+</div>
 </body>
 </html>
-
 
 <?php
 include'footer.php';
